@@ -3,11 +3,14 @@
 // 结构： { 产品ID: { cover: "图片地址", images: ["图片地址", ...] } }
 import data from './product-images.json';
 
-/** 把文件名转成网站路径：已是 / 或 http 开头则原样，否则加 /images/ 前缀 */
+/** 把文件名转成网站路径：http 开头原样，/ 开头原样，否则加 base + images/ 前缀 */
 export function toSrc(name) {
   if (!name) return '';
-  if (name.startsWith('/') || name.startsWith('http')) return name;
-  return `/images/${name}`;
+  if (name.startsWith('http')) return name;
+  if (name.startsWith('/')) return name;
+  const _b = import.meta.env.BASE_URL;
+  const base = _b.endsWith('/') ? _b : _b + '/';
+  return `${base}images/${name}`;
 }
 
 /** 获取某个产品的图片配置 */

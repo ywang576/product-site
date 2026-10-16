@@ -7,6 +7,10 @@ interface Props {
 
 const { title } = Astro.props;
 const pageTitle = title ? `${title} · ${site.title}` : site.title;
+
+// 站点基础路径（GitHub Pages 子路径时会自动带上，如 /product-site/），确保以 / 结尾
+const _b = import.meta.env.BASE_URL;
+const base = _b.endsWith('/') ? _b : _b + '/';
 ---
 
 <!doctype html>
@@ -20,13 +24,13 @@ const pageTitle = title ? `${title} · ${site.title}` : site.title;
   <body>
     <header class="site-header">
       <div class="container header-inner">
-        <a href="/" class="logo">产品介绍</a>
+        <a href={base} class="logo">产品介绍</a>
         <nav>
-          <a href="/">首页</a>
-          <a href="/products/diagnostic-tool">教学积木</a>
-          <a href="/products/can-analyzer">车载网络检测仪</a>
-          <a href="/downloads">下载中心</a>
-          <a href="/about">公司简介</a>
+          <a href={base}>首页</a>
+          <a href={`${base}products/diagnostic-tool`}>教学积木</a>
+          <a href={`${base}products/can-analyzer`}>车载网络检测仪</a>
+          <a href={`${base}downloads`}>下载中心</a>
+          <a href={`${base}about`}>公司简介</a>
         </nav>
       </div>
     </header>
@@ -168,3 +172,6 @@ const pageTitle = title ? `${title} · ${site.title}` : site.title;
     </style>
   </body>
 </html>
+    }
+  </style>
+</BaseLayout>

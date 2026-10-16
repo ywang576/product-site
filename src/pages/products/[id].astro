@@ -14,6 +14,8 @@ export function getStaticPaths() {
 const { product } = Astro.props;
 const dl = downloads[product.id] || { firmware: [], software: [] };
 const hasDownloads = (dl.firmware?.length ?? 0) > 0 || (dl.software?.length ?? 0) > 0;
+const _b = import.meta.env.BASE_URL;
+const base = _b.endsWith('/') ? _b : _b + '/';
 
 // 图片从 images.txt 读取（也可回退到 products.json 里的 cover/images）
 const imgConfig = getProductImages(product.id);
@@ -24,7 +26,8 @@ const images = imgConfig.images.length > 0 ? imgConfig.images : product.images |
 <BaseLayout title={product.name}>
   <div class="container">
     <nav class="breadcrumb">
-      <a href="/">首页</a> / <span>{product.name}</span>
+
+      <a href={base}>首页</a> / <span>{product.name}</span>
     </nav>
 
     <!-- 头部 -->
@@ -35,8 +38,7 @@ const images = imgConfig.images.length > 0 ? imgConfig.images : product.images |
         {product.slogan && <p class="slogan">“{product.slogan}”</p>}
         <p class="desc">{product.description}</p>
         <div class="hero-actions">
-          {hasDownloads && <a class="btn" href={`/downloads#${product.id}`}>前往下载</a>}
-          <a class="btn btn-outline" href="#contact">咨询 / 合作</a>
+          {hasDownloads && <a class="btn" href={`${base}downloads#${product.id}`}>前往下载</a>}
         </div>
       </div>
       {cover && (

@@ -9,6 +9,9 @@ const productList = products.map((p) => {
   const img = getProductImages(p.id);
   return { ...p, cover: img.cover || p.cover || '' };
 });
+
+const _b = import.meta.env.BASE_URL;
+const base = _b.endsWith('/') ? _b : _b + '/';
 ---
 
 <BaseLayout>
@@ -24,7 +27,8 @@ const productList = products.map((p) => {
       <h2>核心产品</h2>
       <div class="grid">
         {productList.map((p) => (
-          <a class="card" href={`/products/${p.id}`}>
+
+          <a class="card" href={`${base}products/${p.id}`}>
             {p.cover && (
               <div class="card-cover">
                 <img src={p.cover} alt={p.name} loading="lazy" />
@@ -72,7 +76,6 @@ const productList = products.map((p) => {
       <h2>咨询与合作</h2>
       <p>欢迎院校、车企、4S 店及经销商联系我们，获取样机、课件与报价。</p>
       <div class="contact-actions">
-        <a class="btn" href={`mailto:${site.contact.email}`}>邮箱咨询</a>
         <a class="btn btn-outline" href="/about">了解公司</a>
       </div>
     </section>

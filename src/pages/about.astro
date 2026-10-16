@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import site from '../data/site.json';
+
+const _b = import.meta.env.BASE_URL;
+const base = _b.endsWith('/') ? _b : _b + '/';
 ---
 
 <BaseLayout title="公司简介">
@@ -43,19 +46,16 @@ import site from '../data/site.json';
         <p>填补汽车电子与新能源维修“便携教学 + 故障考核”的市场空白。</p>
       </section>
     </div>
-
-    <section class="card">
       <h2>核心产品</h2>
       <ul class="product-links">
         <li>
-          <a href="/products/diagnostic-tool">
+
+          <a href={`${base}products/diagnostic-tool`}>
             <strong>汽车维修电子教学积木</strong>
             <span>像拼积木一样学汽车电路，可拼搭、可设故障、可考核、可携带。</span>
-          </a>
         </li>
         <li>
           <a href="/products/can-analyzer">
-            <strong>车载网络检测仪</strong>
             <span>CAN、LIN、国标直流快充，一机三测，插上总线，灯亮即知。</span>
           </a>
         </li>
