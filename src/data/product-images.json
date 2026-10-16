@@ -1,0 +1,20 @@
+{
+  "diagnostic-tool": {
+    "cover": "diagnostic-1.jpg",
+    "images": [
+      "diagnostic-2.png",
+      "diagnostic-3.png",
+      "diagnostic-4.png"
+    ]
+  },
+  "can-analyzer": {
+    "cover": "can-analyzer-1.jpeg",
+    "images": [
+      "can-analyzer-2.png",
+      "can-analyzer-3.png",
+      "can-analyzer-4.png"
+    ]
+  }
+}
+
+

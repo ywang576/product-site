@@ -1,0 +1,30 @@
+{
+  "can-analyzer": {
+    "firmware": [
+      {
+        "version": "v1.0.0",
+        "date": "2025-01-01",
+        "file": "can-analyzer_firmware_v1.0.0.bin",
+        "url": "https://github.com/你的用户名/你的仓库/releases/download/v1.0.0/can-analyzer_firmware_v1.0.0.bin",
+        "size": "30 MB",
+        "sha256": "在此填写 SHA256 校验值",
+        "notes": "首个正式版本"
+      }
+    ],
+    "software": [
+      {
+        "version": "v1.0.0",
+        "date": "2025-01-01",
+        "file": "CAN_Analyzer_Setup_v1.0.0.exe",
+        "url": "https://github.com/你的用户名/你的仓库/releases/download/v1.0.0/CAN_Analyzer_Setup_v1.0.0.exe",
+        "size": "30 MB",
+        "sha256": "在此填写 SHA256 校验值",
+        "notes": "首个正式版本"
+      }
+    ]
+  },
+  "diagnostic-tool": {
+    "firmware": [],
+    "software": []
+  }
+}

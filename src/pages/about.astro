@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import site from '../data/site.json';
+---
+
+<BaseLayout title="公司简介">
+  <div class="container">
+    <h1 class="page-title">公司简介</h1>
+
+    <section class="card intro">
+      <h2>{site.company}</h2>
+      <p>
+        {site.company} 专注于汽车电子诊断工具与汽车维修教学实训产品的研发与销售。
+        我们立足汽车后市场与职业教育两大场景，致力于把汽车电路、新能源三电与车载程序逻辑，
+        转化为更便携、更易学、更低成本的诊断与教学方案。
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>我们的方向</h2>
+      <p>
+        汽车维修教学正在从“讲原理”走向“做诊断”。传统教具体积大、价格高、移动难，
+        且多为大型定制 To B 项目，难以适配车企短平快培训、院校实训和修理厂碎片化学习场景。
+        我们选择了一条不同的路：<strong>把产品做小、做便携、做标准化</strong>，让教学和诊断都能随时随地发生。
+      </p>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>面向院校</h2>
+        <p>降低开课门槛，提升实训效率，支持项目化教学、故障考核与自学复习。</p>
+      </section>
+      <section class="card">
+        <h2>面向车企 / 4S 店</h2>
+        <p>便携移动教学，标准化培训与考核，适配短平快培训场景。</p>
+      </section>
+      <section class="card">
+        <h2>面向修理厂 / 维修工</h2>
+        <p>低成本掌握新能源与电子诊断能力，随身携带、即学即用。</p>
+      </section>
+      <section class="card">
+        <h2>面向行业</h2>
+        <p>填补汽车电子与新能源维修“便携教学 + 故障考核”的市场空白。</p>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>核心产品</h2>
+      <ul class="product-links">
+        <li>
+          <a href="/products/diagnostic-tool">
+            <strong>汽车维修电子教学积木</strong>
+            <span>像拼积木一样学汽车电路，可拼搭、可设故障、可考核、可携带。</span>
+          </a>
+        </li>
+        <li>
+          <a href="/products/can-analyzer">
+            <strong>车载网络检测仪</strong>
+            <span>CAN、LIN、国标直流快充，一机三测，插上总线，灯亮即知。</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section class="card contact-card">
+      <h2>联系我们</h2>
+      <p>欢迎院校、车企、4S 店及经销商洽谈合作。</p>
+      <ul class="contact-list">
+        <li><span>公司</span>{site.company}</li>
+        {site.contact.email && (
+          <li>
+            <span>邮箱</span>
+            <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+          </li>
+        )}
+        {site.contact.phone && <li><span>电话</span>{site.contact.phone}</li>}
+        {site.contact.address && <li><span>地址</span>{site.contact.address}</li>}
+      </ul>
+    </section>
+  </div>
+
+  <style>
+    .page-title {
+      font-size: 2rem;
+      margin-bottom: 28px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .card h2 {
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      padding-left: 14px;
+      border-left: 4px solid var(--primary);
+    }
+    .intro h2 {
+      border-left: none;
+      padding-left: 0;
+      color: var(--primary);
+    }
+    .card p {
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+    .card strong {
+      color: var(--text);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .grid .card {
+      margin-bottom: 0;
+    }
+    .product-links {
+      list-style: none;
+      display: grid;
+      gap: 14px;
+    }
+    .product-links a {
+      display: block;
+      padding: 18px 20px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .product-links a:hover {
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+    .product-links strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      color: var(--primary);
+    }
+    .product-links span {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+    .contact-card {
+      text-align: center;
+    }
+    .contact-card h2 {
+      border-left: none;
+      padding-left: 0;
+      text-align: center;
+      display: inline-block;
+      border-left: 4px solid var(--primary);
+      padding-left: 14px;
+    }
+    .contact-list {
+      list-style: none;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+      text-align: left;
+    }
+    .contact-list li {
+      display: flex;
+      gap: 16px;
+    }
+    .contact-list span {
+      color: var(--text-muted);
+      min-width: 48px;
+    }
+    .contact-list a {
+      color: var(--primary);
+    }
+  </style>
+</BaseLayout>

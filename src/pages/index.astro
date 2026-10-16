@@ -1,0 +1,222 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import site from '../data/site.json';
+import products from '../data/products.json';
+import { getProductImages } from '../data/images.js';
+
+// 给每个产品补上封面图（来自 images.txt）
+const productList = products.map((p) => {
+  const img = getProductImages(p.id);
+  return { ...p, cover: img.cover || p.cover || '' };
+});
+---
+
+<BaseLayout>
+  <div class="container">
+    <!-- 页面头部 -->
+    <section class="hero">
+      <h1>产品介绍</h1>
+      <p class="subtitle">{site.subtitle}</p>
+    </section>
+
+    <!-- 产品列表 -->
+    <section class="products">
+      <h2>核心产品</h2>
+      <div class="grid">
+        {productList.map((p) => (
+          <a class="card" href={`/products/${p.id}`}>
+            {p.cover && (
+              <div class="card-cover">
+                <img src={p.cover} alt={p.name} loading="lazy" />
+              </div>
+            )}
+            <span class="badge">{p.tagline}</span>
+            <h3>{p.name}</h3>
+            <p class="desc">{p.description}</p>
+            {p.highlights && (
+              <ul class="card-points">
+                {p.highlights.slice(0, 3).map((h) => <li>{h}</li>)}
+              </ul>
+            )}
+            <span class="more">查看详情 →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- 为什么选择我们 -->
+    <section class="why">
+      <h2>为什么选择我们</h2>
+      <div class="why-grid">
+        <div class="why-card">
+          <h3>更便携</h3>
+          <p>小型化、模块化设计，适配课堂、门店、户外等多种教学与维修场景。</p>
+        </div>
+        <div class="why-card">
+          <h3>更省成本</h3>
+          <p>相比大型定制教具与专业分析仪，采购与维护成本更低，开课门槛更低。</p>
+        </div>
+        <div class="why-card">
+          <h3>即学即用</h3>
+          <p>看灯即懂、拼搭即学，培训成本低，新人、老师傅都能快速上手。</p>
+        </div>
+        <div class="why-card">
+          <h3>持续更新</h3>
+          <p>固件与上位机软件支持在线升级，产品越用越新，投资不贬值。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 联系 -->
+    <section class="contact">
+      <h2>咨询与合作</h2>
+      <p>欢迎院校、车企、4S 店及经销商联系我们，获取样机、课件与报价。</p>
+      <div class="contact-actions">
+        <a class="btn" href={`mailto:${site.contact.email}`}>邮箱咨询</a>
+        <a class="btn btn-outline" href="/about">了解公司</a>
+      </div>
+    </section>
+  </div>
+
+  <style>
+    .hero {
+      text-align: center;
+      padding: 40px 0 36px;
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      margin-bottom: 12px;
+    }
+    .subtitle {
+      color: var(--primary);
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .products h2,
+    .why h2,
+    .contact h2 {
+      font-size: 1.5rem;
+      margin-bottom: 24px;
+      padding-left: 14px;
+      border-left: 4px solid var(--primary);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: block;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+    .card-cover {
+      margin: -28px -28px 20px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      background: var(--bg);
+    }
+    .card-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: var(--primary-dark);
+      font-size: 0.8rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+    .card .desc {
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .card-points {
+      list-style: none;
+      margin-bottom: 18px;
+      display: grid;
+      gap: 8px;
+    }
+    .card-points li {
+      padding-left: 22px;
+      position: relative;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .card-points li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #16a34a;
+      font-weight: 700;
+    }
+    .more {
+      color: var(--primary);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .why {
+      margin-top: 48px;
+    }
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+    .why-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    .why-card h3 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .why-card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+    .contact {
+      margin-top: 48px;
+      text-align: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 24px;
+    }
+    .contact p {
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+    .contact-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 640px) {
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</BaseLayout>

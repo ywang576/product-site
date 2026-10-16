@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import products from '../data/products.json';
+import downloads from '../data/downloads.json';
+
+const productsWithDownloads = products.map((p) => ({
+  product: p,
+  firmware: downloads[p.id]?.firmware ?? [],
+  software: downloads[p.id]?.software ?? [],
+}));
+---
+
+<BaseLayout title="下载中心">
+  <div class="container">
+    <h1 class="page-title">下载中心</h1>
+    <p class="page-desc">在此下载各产品的最新固件与上位机软件。</p>
+
+    {productsWithDownloads.map(({ product, firmware, software }) => (
+      <section class="product-block" id={product.id}>
+        <h2>{product.name}</h2>
+
+        {firmware.length === 0 && software.length === 0 && (
+          <p class="empty">暂无下载内容。</p>
+        )}
+
+        {[
+          { label: '固件', items: firmware },
+          { label: '上位机软件', items: software },
+        ].map(
+          ({ label, items }) =>
+            items.length > 0 && (
+              <div class="group">
+                <h3>{label}</h3>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>版本</th>
+                        <th>日期</th>
+                        <th>大小</th>
+                        <th>更新说明</th>
+                        <th>下载</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {items.map((it) => (
+                        <tr>
+                          <td><strong>{it.version}</strong></td>
+                          <td>{it.date}</td>
+                          <td>{it.size}</td>
+                          <td class="notes">{it.notes}</td>
+                          <td>
+                            <a class="btn-sm" href={it.url} target="_blank" rel="noopener">
+                              下载
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )
+        )}
+      </section>
+    ))}
+  </div>
+
+  <style>
+    .page-title {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    .page-desc {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+    .product-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+      scroll-margin-top: 80px;
+    }
+    .product-block h2 {
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+    }
+    .group {
+      margin-bottom: 20px;
+    }
+    .group h3 {
+      font-size: 1.05rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    th,
+    td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    th {
+      color: var(--text-muted);
+      font-weight: 500;
+      background: #f1f5f9;
+    }
+    .notes {
+      white-space: normal;
+      min-width: 200px;
+    }
+    .btn-sm {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+    }
+    .btn-sm:hover {
+      background: var(--primary-dark);
+    }
+    .empty {
+      color: var(--text-muted);
+    }
+  </style>
+</BaseLayout>

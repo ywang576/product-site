@@ -1,0 +1,16 @@
+{
+  "name": "product-site",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "产品展示与固件/软件下载站",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^4.16.0"
+  }
+}

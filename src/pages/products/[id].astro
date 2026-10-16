@@ -1,0 +1,466 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import products from '../../data/products.json';
+import downloads from '../../data/downloads.json';
+import { getProductImages } from '../../data/images.js';
+
+export function getStaticPaths() {
+  return products.map((p) => ({
+    params: { id: p.id },
+    props: { product: p },
+  }));
+}
+
+const { product } = Astro.props;
+const dl = downloads[product.id] || { firmware: [], software: [] };
+const hasDownloads = (dl.firmware?.length ?? 0) > 0 || (dl.software?.length ?? 0) > 0;
+
+// 图片从 images.txt 读取（也可回退到 products.json 里的 cover/images）
+const imgConfig = getProductImages(product.id);
+const cover = imgConfig.cover || product.cover || '';
+const images = imgConfig.images.length > 0 ? imgConfig.images : product.images || [];
+---
+
+<BaseLayout title={product.name}>
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> / <span>{product.name}</span>
+    </nav>
+
+    <!-- 头部 -->
+    <section class={`hero ${cover ? 'hero-with-cover' : ''}`}>
+      <div class="hero-text">
+        <p class="tagline">{product.tagline}</p>
+        <h1>{product.name}</h1>
+        {product.slogan && <p class="slogan">“{product.slogan}”</p>}
+        <p class="desc">{product.description}</p>
+        <div class="hero-actions">
+          {hasDownloads && <a class="btn" href={`/downloads#${product.id}`}>前往下载</a>}
+          <a class="btn btn-outline" href="#contact">咨询 / 合作</a>
+        </div>
+      </div>
+      {cover && (
+        <div class="hero-cover">
+          <img src={cover} alt={product.name} loading="eager" />
+        </div>
+      )}
+    </section>
+
+    <!-- 产品图集 -->
+    {images.length > 0 && (
+      <section class="section">
+        <h2>产品图片</h2>
+        <div class="gallery">
+          {images.map((src, i) => (
+            <a class="gallery-item" href={src} target="_blank" rel="noopener">
+              <img src={src} alt={`${product.name} 图 ${i + 1}`} loading="lazy" />
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 核心亮点 -->
+    {product.highlights && product.highlights.length > 0 && (
+      <section class="section highlight-section">
+        <h2>核心亮点</h2>
+        <ul class="highlights">
+          {product.highlights.map((h) => <li>{h}</li>)}
+        </ul>
+      </section>
+    )}
+
+    <!-- 产品特点 -->
+    {product.features && product.features.length > 0 && (
+      <section class="section">
+        <h2>产品特点</h2>
+        <div class="feature-grid">
+          {product.features.map((f) => (
+            <div class="feature-card">
+              <h3>{f.title}</h3>
+              <p>{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 等级 / 进阶（教学积木） -->
+    {product.levels && product.levels.length > 0 && (
+      <section class="section">
+        <h2>产品体系</h2>
+        <div class="level-list">
+          {product.levels.map((lv, i) => (
+            <div class="level-item">
+              <span class="level-num">{i + 1}</span>
+              <div>
+                <h3>{lv.name}</h3>
+                <p>{lv.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 痛点对比（检测仪） -->
+    {product.painPoints && product.painPoints.length > 0 && (
+      <section class="section">
+        <h2>客户痛点 → 我们的方案</h2>
+        <div class="table-wrap">
+          <table class="pain-table">
+            <thead>
+              <tr>
+                <th>客户痛点</th>
+                <th>传统做法</th>
+                <th>本产品</th>
+              </tr>
+            </thead>
+            <tbody>
+              {product.painPoints.map((p) => (
+                <tr>
+                  <td>{p.pain}</td>
+                  <td class="old">{p.old}</td>
+                  <td class="new">{p.new}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    )}
+
+    <!-- 应用场景 -->
+    {product.scenarios && product.scenarios.length > 0 && (
+      <section class="section">
+        <h2>应用场景</h2>
+        <div class="scenario-grid">
+          {product.scenarios.map((s) => (
+            <div class="scenario-card">
+              <h3>{s.title}</h3>
+              <ul>
+                {s.items.map((it) => <li>{it}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 规格参数 -->
+    {product.specs && product.specs.length > 0 && (
+      <section class="section">
+        <h2>规格参数</h2>
+        <table class="specs">
+          <tbody>
+            {product.specs.map((s) => (
+              <tr>
+                <th>{s.label}</th>
+                <td>{s.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    )}
+
+    <!-- 联系 -->
+    <section class="section contact-section" id="contact">
+      <h2>咨询与合作</h2>
+      <p>欢迎院校、车企、4S 店及经销商联系我们，获取样机、课件与报价。</p>
+      <a class="btn" href="mailto:wangyc6620182@163.com">邮箱咨询</a>
+    </section>
+  </div>
+
+  <style>
+    .breadcrumb {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+    .breadcrumb a {
+      color: var(--primary);
+    }
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 48px 36px;
+      margin-bottom: 28px;
+    }
+    .hero-with-cover {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+    .hero-cover {
+      display: flex;
+      justify-content: center;
+    }
+    .hero-cover img {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 12px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+      background: #fff;
+    }
+    .hero .tagline {
+      color: #93c5fd;
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+    }
+    .hero .slogan {
+      font-size: 1.1rem;
+      color: #dbeafe;
+      border-left: 3px solid #93c5fd;
+      padding-left: 16px;
+      margin-bottom: 18px;
+      line-height: 1.7;
+    }
+    .hero .desc {
+      color: #e0e7ff;
+      max-width: 760px;
+      margin-bottom: 24px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero .btn {
+      background: #fff;
+      color: var(--primary);
+    }
+    .hero .btn:hover {
+      background: #e0e7ff;
+    }
+    .hero .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 1px solid #93c5fd;
+    }
+    .hero .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .section h2 {
+      font-size: 1.35rem;
+      margin-bottom: 22px;
+      padding-left: 14px;
+      border-left: 4px solid var(--primary);
+    }
+    .highlight-section {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .gallery-item {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--bg);
+      aspect-ratio: 4 / 3;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+    .highlights {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .highlights li {
+      padding-left: 30px;
+      position: relative;
+      font-weight: 500;
+    }
+    .highlights li::before {
+      content: "★";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+    .feature-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .feature-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+    .level-list {
+      display: grid;
+      gap: 16px;
+    }
+    .level-item {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      padding: 18px;
+      background: var(--bg);
+      border-radius: 10px;
+    }
+    .level-num {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .level-item h3 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+    .level-item p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+    .table-wrap {
+      overflow-x: auto;
+    }
+    .pain-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    .pain-table th,
+    .pain-table td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .pain-table th {
+      color: var(--text-muted);
+      font-weight: 500;
+      background: #f1f5f9;
+    }
+    .pain-table th:first-child {
+      color: var(--text);
+    }
+    .pain-table .old {
+      color: var(--text-muted);
+    }
+    .pain-table .new {
+      color: #16a34a;
+      font-weight: 500;
+    }
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .scenario-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .scenario-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+    .scenario-card ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .scenario-card li {
+      padding-left: 22px;
+      position: relative;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .scenario-card li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #16a34a;
+    }
+    .specs {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .specs th,
+    .specs td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .specs th {
+      width: 180px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .contact-section {
+      text-align: center;
+    }
+    .contact-section p {
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    @media (max-width: 760px) {
+      .hero-with-cover {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .hero-cover {
+        order: -1;
+      }
+    }
+    @media (max-width: 640px) {
+      .hero {
+        padding: 32px 24px;
+      }
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+      .section {
+        padding: 24px 20px;
+      }
+    }
+  </style>
+</BaseLayout>
